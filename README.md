@@ -6,6 +6,17 @@
 
 <sub>Python · Go · TypeScript — LangGraph, MCP, Tree-sitter, Kubernetes</sub>
 
+<br><br>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)
+
 </div>
 
 <br>
@@ -29,7 +40,11 @@ Markdown makes an agent infer structure from prose. XTXT lets the document carry
 images, tables, charts, and typed records in a file that still opens in any editor and
 diffs cleanly in git. A written spec, a reference parser, and seven implementations.
 
-<sub>[Live demo](https://saimouli3.github.io/xtxt/) · [pkg.go.dev](https://pkg.go.dev/github.com/SaiMouli3/xtxt) · [PyPI](https://pypi.org/project/xtxt/) · [npm](https://www.npmjs.com/package/xtxt-js)</sub>
+[![Live demo](https://img.shields.io/badge/live-demo-1f6feb?style=flat-square)](https://saimouli3.github.io/xtxt/)
+[![pkg.go.dev](https://img.shields.io/badge/pkg.go.dev-reference-00ADD8?style=flat-square&logo=go&logoColor=white)](https://pkg.go.dev/github.com/SaiMouli3/xtxt)
+[![PyPI](https://img.shields.io/pypi/v/xtxt?style=flat-square&logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/xtxt/)
+[![npm](https://img.shields.io/npm/v/xtxt-js?style=flat-square&logo=npm&logoColor=white&label=npm)](https://www.npmjs.com/package/xtxt-js)
+[![License](https://img.shields.io/github/license/SaiMouli3/xtxt?style=flat-square)](https://github.com/SaiMouli3/xtxt/blob/main/LICENSE)
 
 <br>
 
@@ -70,15 +85,17 @@ shared model. Kubernetes handles orchestration and scaling across the fleet.
 
 Contributing back to the infrastructure I build on.
 
-**[PrefectHQ/fastmcp#4705](https://github.com/PrefectHQ/fastmcp/pull/4705)** · merged —
+[![fastmcp#4705](https://img.shields.io/badge/PrefectHQ%2Ffastmcp%234705-merged-8957e5?style=flat-square&logo=github&logoColor=white)](https://github.com/PrefectHQ/fastmcp/pull/4705)
+
 `ResponseCachingMiddleware` cached every result it saw, including ones a tool returned with
 `is_error=True`. A transient 503 or a rate-limit got pinned for the full hour-long TTL, so
 every later call replayed the stale failure and the tool never ran again. Added the guard
 alongside the passthroughs that already encode the same idea — some results describe a
 moment, not an answer — plus tests covering the retry path.
 
-**[chroma-core/chroma#7559](https://github.com/chroma-core/chroma/pull/7559)** — Two API
-implementations annotated a return type as the string `"IndexingStatus"` without importing
+[![chroma#7559](https://img.shields.io/badge/chroma--core%2Fchroma%237559-open-2da44e?style=flat-square&logo=github&logoColor=white)](https://github.com/chroma-core/chroma/pull/7559)
+
+Two API implementations annotated a return type as the string `"IndexingStatus"` without importing
 the name. Because the annotation was a string, the missing import stayed invisible at
 import time and only surfaced once something resolved type hints. Traced it to both call
 sites, fixed, and added a regression test that needs no cluster to run.
