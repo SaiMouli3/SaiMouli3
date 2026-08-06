@@ -85,10 +85,11 @@ and **[fastmcp](https://github.com/jlowin/fastmcp)**.
 
 ## Elsewhere
 
-Also building **[symptom-tracker](https://github.com/SaiMouli3/symptom-tracker)** — a
-chronic-symptom app for conditions medicine tends to dismiss, with pattern insights and
-a clean export for doctor visits — and **[SecurePass](https://github.com/SaiMouli3/SecurePass)**,
-a password vault that encrypts client-side so the server never sees a credential.
+Also building **[SecurePass](https://github.com/SaiMouli3/SecurePass)**, a password vault
+that encrypts client-side so the server never sees a credential, and
+**[BankStatement_Extraction](https://github.com/SaiMouli3/BankStatement_Extraction)** —
+template-free statement parsing with OCR fallback, balance-reconciliation checks, and a
+per-transaction confidence score.
 
 <br>
 
