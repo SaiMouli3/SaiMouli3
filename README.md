@@ -70,14 +70,24 @@ shared model. Kubernetes handles orchestration and scaling across the fleet.
 
 Contributing back to the infrastructure I build on.
 
+**[PrefectHQ/fastmcp#4705](https://github.com/PrefectHQ/fastmcp/pull/4705)** · merged —
+`ResponseCachingMiddleware` cached every result it saw, including ones a tool returned with
+`is_error=True`. A transient 503 or a rate-limit got pinned for the full hour-long TTL, so
+every later call replayed the stale failure and the tool never ran again. Added the guard
+alongside the passthroughs that already encode the same idea — some results describe a
+moment, not an answer — plus tests covering the retry path.
+
 **[chroma-core/chroma#7559](https://github.com/chroma-core/chroma/pull/7559)** — Two API
 implementations annotated a return type as the string `"IndexingStatus"` without importing
 the name. Because the annotation was a string, the missing import stayed invisible at
 import time and only surfaced once something resolved type hints. Traced it to both call
 sites, fixed, and added a regression test that needs no cluster to run.
 
-Also working through the trackers at **[pydantic](https://github.com/pydantic/pydantic)**
-and **[fastmcp](https://github.com/jlowin/fastmcp)**.
+Two more up at fastmcp: [#4706](https://github.com/PrefectHQ/fastmcp/pull/4706) adds RFC
+6570 explode support for list-typed query parameters, and
+[#4758](https://github.com/PrefectHQ/fastmcp/pull/4758) serializes a read-modify-write race
+in the event store's stream list. Also reading the tracker at
+**[pydantic](https://github.com/pydantic/pydantic)**.
 
 <br>
 
