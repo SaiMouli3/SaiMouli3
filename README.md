@@ -1,5 +1,17 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="dark_mode.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="light_mode.svg" />
+  <img alt="SaiMouli3's GitHub profile" src="dark_mode.svg" width="100%" />
+</picture>
+
+</div>
+
+<br>
+
+<div align="center">
+
 # Sai Mouli
 
 **I build agents that read, fix, and ship code.**
