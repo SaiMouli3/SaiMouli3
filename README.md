@@ -142,8 +142,6 @@ into repeated `key=value` pairs instead of a single comma-joined string.
 Serializes a read-modify-write race in the event store's stream list that could drop
 concurrent writes under load.
 
-Also reading the tracker at **[pydantic](https://github.com/pydantic/pydantic)**.
-
 <br>
 
 ---
