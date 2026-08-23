@@ -121,22 +121,6 @@ moment, not an answer — plus tests covering the retry path.
 
 <br>
 
-[![chroma#7559](https://img.shields.io/badge/chroma--core%2Fchroma%237559-open-2da44e?style=flat-square&logo=github&logoColor=white)](https://github.com/chroma-core/chroma/pull/7559)
-
-Two API implementations annotated a return type as the string `"IndexingStatus"` without importing
-the name. Because the annotation was a string, the missing import stayed invisible at
-import time and only surfaced once something resolved type hints. Traced it to both call
-sites, fixed, and added a regression test that needs no cluster to run.
-
-<br>
-
-[![fastmcp#4706](https://img.shields.io/badge/PrefectHQ%2Ffastmcp%234706-open-2da44e?style=flat-square&logo=github&logoColor=white)](https://github.com/PrefectHQ/fastmcp/pull/4706)
-
-Adds RFC 6570 explode support for list-typed query parameters, so array values expand
-into repeated `key=value` pairs instead of a single comma-joined string.
-
-<br>
-
 [![fastmcp#4758](https://img.shields.io/badge/PrefectHQ%2Ffastmcp%234758-merged-8957e5?style=flat-square&logo=github&logoColor=white)](https://github.com/PrefectHQ/fastmcp/pull/4758)
 
 Serializes a read-modify-write race in the event store's stream list that could drop
