@@ -137,7 +137,7 @@ into repeated `key=value` pairs instead of a single comma-joined string.
 
 <br>
 
-[![fastmcp#4758](https://img.shields.io/badge/PrefectHQ%2Ffastmcp%234758-open-2da44e?style=flat-square&logo=github&logoColor=white)](https://github.com/PrefectHQ/fastmcp/pull/4758)
+[![fastmcp#4758](https://img.shields.io/badge/PrefectHQ%2Ffastmcp%234758-merged-8957e5?style=flat-square&logo=github&logoColor=white)](https://github.com/PrefectHQ/fastmcp/pull/4758)
 
 Serializes a read-modify-write race in the event store's stream list that could drop
 concurrent writes under load.
