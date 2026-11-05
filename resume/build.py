@@ -28,6 +28,17 @@ def icon(name):
     return svg.replace("<svg", f'<svg class="ic {filled}" aria-hidden="true"', 1)
 
 
+def logo(slug):
+    """Company logo from resume/logos/<slug>.(svg|png|jpg), embedded as a data URI. Empty if the file is absent."""
+    import base64
+    for ext, mime in (("svg", "image/svg+xml"), ("png", "image/png"), ("jpg", "image/jpeg")):
+        f = OUT / "logos" / f"{slug}.{ext}"
+        if f.exists():
+            data = base64.b64encode(f.read_bytes()).decode()
+            return f'<img class="logo" alt="" src="data:{mime};base64,{data}">'
+    return ""
+
+
 def contact(name, href, text):
     inner = f"{icon(name)}{text}"
     return f'<span class="ci">{link(href, inner) if href else inner}</span>'
@@ -92,10 +103,10 @@ def experience(order):
     nw = ([NW_SQL, NW_BOT, NW_OBS, NW_EVT, NW_PERF] if order == "ai"
           else [NW_OBS, NW_EVT, NW_PERF, NW_SQL, NW_BOT])
     return section("Experience",
-        entry("Software Engineer | NatWest Group", "Bengaluru, India | Jul 2025 &ndash; Present", nw) +
+        entry(f"{logo('natwest')}Software Engineer | NatWest Group", "Bengaluru, India | Jul 2025 &ndash; Present", nw) +
         entry("Backend Developer Intern | Aamara Technologies", "Bengaluru, India | Mar 2024 &ndash; Aug 2024",
               [AA_SYS, AA_RULES]) +
-        entry("Software Development Intern | Pods Studio", "Bengaluru, India | Nov 2023 &ndash; Dec 2023", [PODS]))
+        entry(f"{logo('pods-studio')}Software Development Intern | Pods Studio", "Bengaluru, India | Nov 2023 &ndash; Dec 2023", [PODS]))
 
 
 # ---------------- open source ----------------
@@ -184,6 +195,7 @@ h2 { margin: 0 0 4pt; padding-bottom: 1.5pt; border-bottom: 0.5pt solid var(--ru
 .entry:last-child { margin-bottom: 0; }
 .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
 .name { font-size: 10pt; font-weight: 700; color: var(--text); }
+.logo { height: 10pt; width: auto; max-width: 40pt; vertical-align: -2pt; margin-right: 5pt; }
 .meta { font-size: 9.5pt; color: var(--meta); white-space: nowrap; }
 ul { margin: 1pt 0 0; padding: 0; list-style: none; }
 li { margin-bottom: 2pt; padding-left: 10pt; position: relative; }
