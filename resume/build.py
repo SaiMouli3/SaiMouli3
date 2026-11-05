@@ -195,7 +195,7 @@ h2 { margin: 0 0 4pt; padding-bottom: 1.5pt; border-bottom: 0.5pt solid var(--ru
 .entry:last-child { margin-bottom: 0; }
 .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
 .name { font-size: 10pt; font-weight: 700; color: var(--text); }
-.logo { height: 10pt; width: auto; max-width: 40pt; vertical-align: -2pt; margin-right: 5pt; }
+.logo { height: 10.5pt; width: 10.5pt; object-fit: contain; vertical-align: -2pt; margin-right: 5pt; }
 .meta { font-size: 9.5pt; color: var(--meta); white-space: nowrap; }
 ul { margin: 1pt 0 0; padding: 0; list-style: none; }
 li { margin-bottom: 2pt; padding-left: 10pt; position: relative; }
