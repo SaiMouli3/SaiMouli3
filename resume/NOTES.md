@@ -1,63 +1,47 @@
 # Resume revision notes
 
-## What I checked on GitHub (5 Nov 2026)
+## Design (per the template spec)
+- A4, one page, single column, white background. Margins 0.55 in (top/bottom) and 0.6 in (sides).
+- Font: Calibri. The embedded font is Carlito, which has the same metrics as Calibri. Name 22 pt, title 11 pt, section headings 10.5 pt, entry titles 10 pt, body and dates 9.5 pt.
+- Colours: #17212B text, #16324F headings, #505C68 secondary text, #687583 dates, #DCE2E8 dividers. It still reads correctly in black and white.
+- Section order: Summary, Experience, Open-Source Contributions, Projects, Technical Skills, Education.
+- No tables, icons, text boxes or header/footer content. Bullets are a real "•" character in the text.
 
-| Claim | Source | Result |
+Three spec items I compressed to keep the page to one page without dropping body text below 9.5 pt:
+- Location and dates sit right-aligned on the title line, not on a line of their own.
+- Education is one line.
+- Databases and Infrastructure share one skills row.
+
+ATS check: `pdftotext` extraction gives the correct reading order with readable headings and dates. Both fonts are embedded TrueType with Unicode maps. All 13 links survive: email, phone, GitHub, LinkedIn, portfolio, 2 repos and 6 PR/issue links. This doesn't guarantee that every ATS will parse the PDF correctly.
+
+## Open-source status, checked on GitHub (5 Nov 2026)
+| Contribution | Status | On resume |
 |---|---|---|
-| fastmcp #4758 merged | GitHub search | Merged 7 Aug 2026 |
-| 64 striped locks | `fastmcp_slim/fastmcp/server/event_store.py` on main | `_LOCK_STRIPES = 64`, `asyncio.Lock` keyed by `hash(stream_id)` |
-| 4 of 5 events lost | PR #4758 body | Seen in the 5-write `asyncio.gather` reproduction, not in production |
-| fastmcp #4705 merged | GitHub search | Merged 4 Aug 2026 |
-| chroma #7560 | GitHub search | Open issue, filed by you; no fix PR |
-| chroma #7559 | GitHub search | **Open, not merged** |
-| XTXT "24-case conformance suite" | `conformance/cases/` | **12 cases** (24 files: one `.xtxt` input and one `.json` expected output each). Changed to "12-case". |
-| XTXT "six more SDKs" | `sdk/` + CI | Python, JS, Rust, Java and C run the fixtures in CI. C++ wraps the C parser and only gets a smoke pass. The resume now says so. |
-| XTXT adoption | repo | 1 star. I made no adoption claim. |
-| Code agent | repo source | Checks below |
+| PrefectHQ/fastmcp #4758 | Merged 7 Aug 2026 | Yes |
+| PrefectHQ/fastmcp #4705 | Merged 4 Aug 2026 | Yes |
+| stanfordnlp/dspy #10720 | Merged 27 Oct 2026 | Yes (new) |
+| chroma-core/chroma issue #7560 | Open | Yes |
+| chroma-core/chroma #7559 | Open, not merged | Yes, as "open" |
+| 567-labs/instructor #2846 | Open | Yes, as "open" (new) |
+| PrefectHQ/fastmcp #4706 | Closed, not merged | No |
+| modelcontextprotocol/python-sdk #3749, #3750 | Closed, not merged | No |
 
-The code agent claims I checked in the source:
-- Tree-sitter is set up with the **Python grammar only**.
-- Embeddings come from Gemini `gemini-embedding-001`. Ranking is in-memory cosine similarity, not FAISS.
-- Nothing in the code stops the agent "until the tests pass". The loop has `recursion_limit=50`, and testing comes from the prompt. I worded the bullet to match.
-- The safety measures are real: workspace path-containment checks on read/write, shell only via `docker exec` with a timeout, and a fresh container per run.
-- The repo has a single commit and no evaluation results, so the resume has none either.
+## Projects
+- **Removed:** Autonomous Code Agent.
+- **Added: Zippyy** (`SaiMouli3/zippyy`). All 15 commits are yours. I ran the backend suite: **145 passed, 5 skipped**. The skipped tests need a real Postgres.
+  - The resume uses only what's in the code and README: webhook inbox with de-duplication and signature checks, durable agent workflows that act through typed tools, a 14-rule deterministic policy engine, LLM calls only for replies the rules are unsure about, row-level security, and SKIP LOCKED job leases.
+  - The README says live WhatsApp and voice providers are untested and the carriers are mocks, so the resume claims no users and no production use.
+  - The repo is **private**, so recruiters will get a 404 on the link. Make it public, or remove the link.
+- **Not used:** `jarvis` ("Mai"). It's a fork of Slopedrop's MIT-licensed Contop: 57 of the 70 commits are by another author.
+- **Not used:** `switch`. It's a copy of sandbox-quantum/switch.
 
-Aamara details came from `SaiMouli3/techno_backend`:
-- DRF + MySQL.
-- `post_save` signals handle breakdowns, which create a pro-rated `Performs` entry.
-- The 2M1P (two machines, one person) split.
-- The `Externals` table holds rates and thresholds.
-- `unique_together` constraints.
+## Still needs your input (nothing invented)
+1. NatWest: the stack, how the SQL is checked (parser? SELECT-only? read-only user?), how failed or ambiguous questions are handled, what the 3 min → 30 s figure measures, and whether it's in production and with how many users.
+2. Aamara: what "20,000 people" means, and how the 4 h → 30 min figure was measured.
+3. Pods: what the 27% measures and over what period, and the payment gateway or root cause.
+4. XTXT: the original resume said "24-case"; the repo has **12** cases (24 files). The resume says 12.
 
-The code has **no** `transaction.atomic` or `select_for_update`, so I didn't add any concurrency or transaction claims for Aamara.
-
-## Changes you asked for that I made
-- Go is **not** in the skills list, as you asked. It shows up only where it's a fact: the XTXT Go reference parser.
-- Tree-sitter moved out of the AI frameworks list. It now appears only as "Tree-sitter code indexing" in Version B.
-- Dropped "microservices" because nothing on the resume backs it up. Added Django REST Framework, which the Aamara code uses.
-- The page is A4, single column, about 625 words, and every bullet is at most 2 lines. Links still work.
-
-## I couldn't fill these without inventing them. Please send the real answers.
-NatWest (the section the checklist wants strongest):
-1. Stack: language/framework, which LLM, which database engine, and how the schema is supplied (whole schema, retrieved subset, embeddings?).
-2. What "validates against the schema" means: parse with sqlglot or similar? SELECT-only? A read-only DB user? Row limits or timeouts?
-3. What happens on a failed or ambiguous query: retry with the error, ask a clarifying question, or just fail?
-4. What the 3 min → 30 s figure measures (end-to-end dashboard response?) and the change that caused it (caching, query rewrites, pagination, async?).
-5. Is it in production, and roughly how many users? Any accuracy or success-rate numbers?
-
-Aamara:
-6. What does "20,000 people" mean: workforce, registered users, or daily active users? One plant or several?
-7. How was the 4 h → 30 min figure measured, and what changed (manual spreadsheet work → automated calculation?).
-
-Pods Studio:
-8. What does the 27% measure (repeat purchases, returning users, churn?), and over what period?
-9. Payment fixes: which gateway was it, and was the root cause webhooks, transaction state, or something else?
-
-Send these and I'll rewrite the NatWest section with real architecture detail. It's the biggest gap.
-
-## Other things I noticed
-- **Security:** the public repo `SaiMouli3/techno_backend` has a production MySQL hostname, username and password in its README. A `db.sqlite3` is committed too. Rotate that password and scrub it from the repo, which means rewriting git history.
-- Your GitHub profile README gives a different email (`saimouli2023@`) from the resume (`saimouli12345678@`). Pick one.
-- autonomous-code-agent has one commit and no eval. Running it on a few real repos and putting the results in the README (tasks tried, PRs opened, tests passing) would be the most convincing evidence you could add. I didn't push anything to your repos.
+## Security
+- `SaiMouli3/techno_backend` (public) has a production MySQL hostname, username and password in its README. Rotate the password, then scrub it from the git history.
 
 Rebuild: `python3 build.py` (writes the HTML, then `render.js` prints the PDFs).
