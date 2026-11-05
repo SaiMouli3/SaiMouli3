@@ -3,6 +3,7 @@
 Usage: python3 build.py   (writes HTML here, then render.js prints A4 PDFs via Playwright)
 Every fact is shared between versions; only title, summary, ordering and emphasis differ.
 """
+import re
 import subprocess
 from pathlib import Path
 
@@ -17,15 +18,27 @@ def link(href, text):
     return f'<a href="{href}">{text}</a>'
 
 
+def icon(name):
+    """Inline SVG icon (vector graphic, not text, so ATS text extraction is unaffected)."""
+    svg = (OUT / "icons" / f"{name}.svg").read_text()
+    svg = re.sub(r"<!--.*?-->|<title>.*?</title>", "", svg, flags=re.S)
+    head, rest = svg.split(">", 1)  # strip sizing only from the root <svg> tag, not from child shapes
+    svg = re.sub(r"\s(class|width|height|role)=\"[^\"]*\"", "", head) + ">" + rest
+    filled = "simple" if 'fill="none"' not in svg else "line"
+    return svg.replace("<svg", f'<svg class="ic {filled}" aria-hidden="true"', 1)
+
+
+def contact(name, href, text):
+    inner = f"{icon(name)}{text}"
+    return f'<span class="ci">{link(href, inner) if href else inner}</span>'
+
+
 HEADER = f"""
 <header>
   <h1>A SAI MOULI</h1>
   <p class="title">{{role}}</p>
-  <p class="contact">Bengaluru, India &nbsp;|&nbsp; {link("tel:+918919554720", "+91 89195 54720")} &nbsp;|&nbsp;
-    {link("mailto:saimouli12345678@gmail.com", "saimouli12345678@gmail.com")}</p>
-  <p class="contact">GitHub: {link(f"{GH}/SaiMouli3", "github.com/SaiMouli3")} &nbsp;|&nbsp;
-    LinkedIn: {link("https://linkedin.com/in/saimouli036", "linkedin.com/in/saimouli036")} &nbsp;|&nbsp;
-    Portfolio: {link("https://sai-mouli-portfolio.vercel.app", "sai-mouli-portfolio.vercel.app")}</p>
+  <p class="contact">{contact("map-pin", None, "Bengaluru, India")}{contact("phone", "tel:+918919554720", "+91 89195 54720")}{contact("mail", "mailto:saimouli12345678@gmail.com", "saimouli12345678@gmail.com")}</p>
+  <p class="contact">{contact("github", f"{GH}/SaiMouli3", "github.com/SaiMouli3")}{contact("linkedin", "https://linkedin.com/in/saimouli036", "linkedin.com/in/saimouli036")}{contact("globe", "https://sai-mouli-portfolio.vercel.app", "sai-mouli-portfolio.vercel.app")}</p>
 </header>"""
 
 
@@ -46,32 +59,38 @@ def section(name, body):
 
 # ---------------- summary ----------------
 SUMMARY = {
-    "backend": ("Backend engineer at NatWest Group, building backend APIs and a natural-language-to-SQL service over a "
-                "136-table reporting database. Builds multi-tenant FastAPI/PostgreSQL systems with policy-gated agent "
-                "workflows; merged fixes into FastMCP and DSPy."),
-    "ai": ("Applied AI engineer at NatWest Group: built a natural-language-to-SQL engine over a 136-table reporting "
-           "database, shipped as a dashboard chatbot. Builds policy-gated agent workflows and MCP tooling; merged "
-           "fixes into FastMCP and DSPy."),
+    "backend": ("Software engineer at NatWest Group building backend APIs and data pipelines for an observability "
+                "platform and an AI analytics engine over a 136-table database. Builds policy-gated agent systems on "
+                "FastAPI/PostgreSQL; merged fixes into FastMCP and DSPy."),
+    "ai": ("Applied AI engineer at NatWest Group: built a text-to-SQL analytics engine over a 136-table database, "
+           "shipped as a dashboard chatbot, plus observability data pipelines. Builds policy-gated agents and MCP "
+           "tooling; merged fixes into FastMCP and DSPy."),
 }
 
 # ---------------- experience ----------------
-NW_SQL = ("Built a natural-language-to-SQL engine over a <b>136-table</b> reporting database: it turns a plain-English "
-          "question into SQL, validates the query against the schema before it runs, executes it, and returns the answer with a chart.")
-NW_BOT = ("Shipped the engine as a chatbot in the analytics dashboard, so stakeholders pull ad-hoc reports themselves.")
-NW_PERF = ("Cut large-query dashboard response time from <b>~3 min to under 30 s</b> by reworking the backend "
-           "APIs and data path.")
+NW_OBS = ("Developed backend APIs and data pipelines for the <b>SCO Observability Platform</b>, letting internal "
+          "banking teams monitor applications and track customer journeys end to end across interconnected systems.")
+NW_EVT = ("Built data processing for application lifecycle events and technical observability data, giving analytics "
+          "and quality-control teams visibility into application status and workflow progress to investigate issues.")
+NW_SQL = ("Built an AI natural-language analytics engine over a <b>136-table</b> reporting database: a text-to-SQL "
+          "workflow generates SQL from plain English, validates it against the schema, executes it and charts the result.")
+NW_BOT = ("Integrated the engine into the dashboard as a chatbot for self-service reporting, replacing ad-hoc query "
+          "requests to engineers.")
+NW_PERF = ("Optimized backend APIs and data-processing workflows, cutting large dashboard queries from "
+           "<b>~3 minutes to under 30 seconds</b>.")
 
 AA_SYS = ("Built the backend of Techno Rings&rsquo; shop-floor operations system, used by <b>20,000 people</b>, on Django "
           "REST Framework and MySQL with a React front end: machine assignment, shift logging and tool-life tracking.")
 AA_RULES = ("Implemented payroll exception paths as model-level rules: breakdowns pro-rate shift and target, and workers "
             "move to another machine&rsquo;s job. Daily processing fell from <b>about four hours to under thirty minutes</b>.")
 
-PODS = ("Moved customer email outreach onto event-driven Celery tasks and cron jobs, removing the manual send "
-        "step (retention up <b>27%</b>); root-caused and fixed customer-reported failed in-app payments.")
+PODS = ("Moved customer email onto event-driven Celery/cron triggers (retention up <b>27%</b>); debugged and "
+        "fixed failed in-app payments.")
 
 
 def experience(order):
-    nw = [NW_SQL, NW_BOT, NW_PERF] if order == "ai" else [NW_PERF, NW_SQL, NW_BOT]
+    nw = ([NW_SQL, NW_BOT, NW_OBS, NW_EVT, NW_PERF] if order == "ai"
+          else [NW_OBS, NW_EVT, NW_PERF, NW_SQL, NW_BOT])
     return section("Experience",
         entry("Software Engineer | NatWest Group", "Bengaluru, India | Jul 2025 &ndash; Present", nw) +
         entry("Backend Developer Intern | Aamara Technologies", "Bengaluru, India | Mar 2024 &ndash; Aug 2024",
@@ -90,15 +109,14 @@ def open_source():
     ]
     dspy = (f"<b>{link(f'{GH}/stanfordnlp/dspy/pull/10720', 'PR #10720')} (merged):</b> fixed dspy.majority() "
             "raising TypeError when voting on non-string values")
-    chroma = [f"<b>{link(f'{CH}/issues/7560', 'Issue #7560')}:</b> showed the CI lint job could never fail "
-              "(continue-on-error plus bash -e meant black, flake8 and prettier never ran). "
-              f"<b>{link(f'{CH}/pull/7559', 'PR #7559')} (open)</b> proposes a fix for two undefined-name defects it hid."]
+    chroma = (f"<b>{link(f'{CH}/issues/7560', 'Issue #7560')}:</b> showed CI lint could never fail; "
+              f"<b>{link(f'{CH}/pull/7559', 'PR #7559')} (open)</b> fixes two hidden bugs")
     instructor = (f"<b>{link(f'{GH}/567-labs/instructor/pull/2846', 'PR #2846')} (open):</b> renders context "
                   "placeholders in input_text parts that reached the model raw")
     return section("Open-Source Contributions",
         entry("PrefectHQ/fastmcp", "2 PRs merged", fastmcp) +
         line_entry("stanfordnlp/dspy", dspy, "1 PR merged") +
-        entry("chroma-core/chroma", "1 issue, 1 open PR", chroma) +
+        line_entry("chroma-core/chroma", chroma, "1 issue, 1 open PR") +
         line_entry("567-labs/instructor", instructor, "1 open PR"))
 
 
@@ -114,10 +132,8 @@ ZIPPYY = entry(
 XTXT = entry(
     "XTXT | Go, Python, JavaScript, Rust, Java, C",
     link(f"{GH}/SaiMouli3/xtxt", "github.com/SaiMouli3/xtxt"),
-    ["Designed a plain-text document format where structure is explicit syntax: directives carry images, tables, "
-     "charts and typed records that the CLI extracts as JSON, while files still diff cleanly in Git.",
-     "Wrote the spec, a Go reference parser and CLI, and a 12-case conformance suite the Python, JS, Rust, Java and "
-     "C SDKs run in CI; published to PyPI and npm, with a VS Code extension and MCP server."])
+    ["Designed a plain-text format whose directives carry images, tables, charts and typed records as JSON-extractable data.",
+     "Wrote the spec, Go reference parser and a 12-case conformance suite run in CI by 5 SDKs; published to PyPI and npm."])
 
 
 def projects(order):
@@ -126,7 +142,7 @@ def projects(order):
 
 # ---------------- skills ----------------
 def skills(order):
-    backend = ("Backend Engineering", "FastAPI, Django, Django REST Framework, Flask, SQLAlchemy, REST APIs, WebSockets, Celery")
+    backend = ("Backend Engineering", "FastAPI, Django, Django REST Framework, Flask, SQLAlchemy, REST APIs, data pipelines, WebSockets, Celery")
     ai = ("AI Engineering", "LangGraph, LangChain, MCP servers, RAG pipelines, embeddings, FAISS")
     rows = [("Languages", "Python, C++, SQL")]
     rows += [backend, ai] if order == "backend" else [ai, backend]
@@ -154,7 +170,12 @@ b { font-weight: 700; }
 header { margin-bottom: 12pt; }
 h1 { margin: 0; font-size: 22pt; font-weight: 700; letter-spacing: 0.4pt; line-height: 1; color: var(--text); }
 .title { margin: 3pt 0 4pt; font-size: 11pt; color: var(--head); }
-.contact { font-size: 9.5pt; color: var(--sub); line-height: 1.25; }
+.contact { font-size: 9.5pt; color: var(--sub); line-height: 1.38; }
+.ci { white-space: nowrap; margin-right: 13pt; }
+.ci:last-child { margin-right: 0; }
+.ic { width: 9pt; height: 9pt; vertical-align: -1.3pt; margin-right: 3.5pt; color: var(--head); }
+.ic.simple { fill: var(--head); }
+.ic.line { stroke: var(--head); stroke-width: 2.2; }
 section { margin-top: 9pt; }
 section:first-of-type { margin-top: 0; }
 h2 { margin: 0 0 4pt; padding-bottom: 1.5pt; border-bottom: 0.5pt solid var(--rule);
